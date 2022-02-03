@@ -1,0 +1,31 @@
+language: generic
+sudo: required
+services:
+        - docker
+before_install:
+        - docker build -t multi-docker-dev -f ./client/Dockerfile.dev ./client       
+script:
+        - docker run -e CI=true multi-docker-dev npm run test        
+after_success:
+        - docker build -t multi-client-prod ./client
+        - docker build -t multi-server-prod ./server
+        - docker build -t multi-worker-prod ./worker
+        - docker build -t multi-nginx-prod ./nginx
+        # Login to docker CLI
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin               
+        # Push to docker hub
+        - docker push multi-client-prod
+        - docker push multi-server-prod
+        - docker push multi-worker-prod
+        - docker push multi-nginx-prod 
+          #deploy: 
+          #        provider: elasticbeanstalk
+          #        region: "us-east-2"
+          #        app: "docker-react"
+          #        env: "dockerreact-env"
+          #        bucket_name: "elasticbeanstalk-us-east-2-673521144972"
+          #        bucket_path: "docker-react"
+          #        on:
+          #                branch: master
+          #        access_key_id: $AWD_ACCESS_KEY
+          #        secret_access_key: $AWS_SECRET_KEY
