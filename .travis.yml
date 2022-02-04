@@ -7,17 +7,17 @@ before_install:
 script:
         - docker run -e CI=true multi-docker-dev npm run test        
 after_success:
-        - docker build -t multi-client-prod ./client
-        - docker build -t multi-server-prod ./server
-        - docker build -t multi-worker-prod ./worker
-        - docker build -t multi-nginx-prod ./nginx
+        - docker build -t ncshy/multi-client-prod ./client
+        - docker build -t ncshy/multi-server-prod ./server
+        - docker build -t ncshy/multi-worker-prod ./worker
+        - docker build -t ncshy/multi-nginx-prod ./nginx
         # Login to docker CLI
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin               
         # Push to docker hub
-        - docker push multi-client-prod
-        - docker push multi-server-prod
-        - docker push multi-worker-prod
-        - docker push multi-nginx-prod 
+        - docker push  ncshy/multi-client-prod
+        - docker push  ncshy/multi-server-prod
+        - docker push  ncshy/multi-worker-prod
+        - docker push  ncshy/multi-nginx-prod 
           #deploy: 
           #        provider: elasticbeanstalk
           #        region: "us-east-2"
